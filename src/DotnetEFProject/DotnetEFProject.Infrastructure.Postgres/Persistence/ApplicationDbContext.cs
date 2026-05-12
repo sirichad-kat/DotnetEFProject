@@ -11,10 +11,7 @@ namespace DotnetEFProject.Infrastructure.Postgres.Persistence
         public DbSet<Lesson> Lessons => Set<Lesson>();
         public DbSet<Enrollment> Enrollments => Set<Enrollment>();
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
