@@ -15,28 +15,88 @@ namespace DotnetEFProject.Infrastructure.Postgres.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasOne(x => x.Profile)
-                .WithOne(x => x.User)
-                .HasForeignKey<UserProfile>(x => x.UserId);
+            // 1 : 1 relationship between User and UserProfile
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("users");
 
-            modelBuilder.Entity<Course>()
-                .HasMany(x => x.Lessons)
-                .WithOne(x => x.Course)
-                .HasForeignKey(x => x.CourseId);
+                entity.HasKey(x => x.Id);
 
-            modelBuilder.Entity<Enrollment>()
-                .HasKey(x => new { x.UserId, x.CourseId });
+                entity.Property(x => x.FullName)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .HasColumnName("full_name");
 
-            modelBuilder.Entity<Enrollment>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.Enrollments)
-                .HasForeignKey(x => x.UserId);
+                entity.Property(x => x.Email)
+                    .IsRequired()
+                    .HasMaxLength(200);
 
-            modelBuilder.Entity<Enrollment>()
-                .HasOne(x => x.Course)
-                .WithMany(x => x.Enrollments)
-                .HasForeignKey(x => x.CourseId);
+                entity.HasIndex(x => x.Email)
+                    .IsUnique();
+            });
+            modelBuilder.Entity<UserProfile>(entity =>
+            {
+                entity.ToTable("user_profiles");
+
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.Bio)
+                    .HasColumnType("text");
+
+                entity.Property(x => x.BirthDate)
+                    .HasColumnType("date");
+
+                entity.HasOne(x => x.User)
+                    .WithOne(x => x.Profile)
+                    .HasForeignKey<UserProfile>(x => x.UserId);
+            });
+            modelBuilder.Entity<Course>(entity =>
+            {
+                entity.ToTable("courses");
+
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.Title)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(x => x.Price)
+                    .HasColumnType("numeric(10,2)"); 
+            });
+
+            modelBuilder.Entity<Lesson>(entity =>
+            {
+                entity.ToTable("lessons");
+
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.Title)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.HasOne(x => x.Course)
+                    .WithMany(x => x.Lessons)
+                    .HasForeignKey(x => x.CourseId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Enrollment>(entity =>
+            {
+                entity.ToTable("enrollments");
+
+                entity.HasKey(x => new { x.UserId, x.CourseId });
+
+                entity.Property(x => x.EnrolledAt)
+                    .HasDefaultValueSql("now()");
+
+                entity.HasOne(x => x.User)
+                    .WithMany(x => x.Enrollments)
+                    .HasForeignKey(x => x.UserId);
+
+                entity.HasOne(x => x.Course)
+                    .WithMany(x => x.Enrollments)
+                    .HasForeignKey(x => x.CourseId);
+            });
         }
     }
 
