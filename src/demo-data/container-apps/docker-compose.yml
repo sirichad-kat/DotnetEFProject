@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   postgres_sv:
-    container_name: demo_data_postgres
+    container_name: demo_ef_data_postgres
     image: postgres:15.2
     environment:
       - POSTGRES_USER=demo
@@ -26,7 +26,7 @@ services:
     depends_on:
       postgres_sv:
         condition: service_healthy
-    container_name: demo_data_migrate_db
+    container_name: demo_ef_data_migrate_db
     environment:
       - LQB_DATABASE_URL=jdbc:postgresql://postgres_sv:5432/DEMO_DATA_SHADOW
       - LQB_DATABASE_USER=demo
