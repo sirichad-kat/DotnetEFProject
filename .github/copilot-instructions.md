@@ -195,3 +195,39 @@ When I ask to "extract configuration", "split DbContext", or "separate OnModelCr
      ```csharp
      modelBuilder.ApplyConfiguration(new AxonsCollabConfiguration("dotnet"));
      ```
+### DbContext Scaffold Separation Pattern
+When I ask to "split scaffold DbContext", "แยก scaffold DbContext", "แยกไฟล์ DbContext จาก scaffold", "extract scaffold DbContext" or similar, follow these rules:
+
+1. **Goal**: แยก scaffolded `ApplicationDbContext` ออกเป็น 3 ส่วน:
+   - Base DbContext (provider-agnostic)
+   - Provider-specific DbContext (เช่น PostgreSQL)
+   - Entity Configuration files (one per entity)
+
+2. **Base DbContext** — `ApplicationDbContext`
+   - File: `[Project].Infrastructure/Persistence/ApplicationDbContext.cs`
+   - Keep only:
+     - `protected string? SchemaName { get; init; }`
+     - `DbSet<T>` properties for all entities
+     - `OnModelCreating` calling `modelBuilder.ApplyConfigurationsFromAssembly(...)`
+     - `protected virtual void OnModelCreatingPartial(ModelBuilder modelBuilder)` (empty)
+     - Constructors with no provider-specific or connection string logic
+   - Remove: Npgsql, connection string parsing, schema extraction
+
+3. **PostgreSQL-specific DbContext** — `PostgresqlApplicationDbContext`
+   - File: `[Project].Infrastructure.Postgresql/Persistence/PostgresqlApplicationDbContext.cs`
+   - Inherits from `ApplicationDbContext`
+   - Contains:
+     - `OnConfiguring` using `optionsBuilder.UseNpgsql(connStr)`
+     - `OnModelCreating` applying each `XxxConfiguration(SchemaName)` explicitly
+     - `ExtractSchema(IConfiguration?, string?)` — resolves schema from config or connection string username
+     - `TryGetSchemaFromConnectionStringParts(string)` — fallback parser
+   - Constructors:
+     - `public (DbContextOptions<PostgresqlApplicationDbContext>, IConfiguration)`
+     - `internal (string connectionString)`
+     - `internal (IConfiguration, string connectionStringKey = "DefaultConnection")`
+
+4. **Entity Configuration files**
+   - File: `[Project].Infrastructure/Persistence/Configurations/[Entity]Configuration.cs`
+   - One file per entity
+   - Pattern: same as **EF Core Entity Configuration Separation Pattern** above
+   - Constructor accepts `string? schemaName = null`

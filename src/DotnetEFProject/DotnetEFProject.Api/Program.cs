@@ -19,7 +19,11 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 //add db context
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DemoConnection")));
+builder.Services.AddDbContext<PostgresApplicationDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseNpgsql(connectionString);
+});
 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 var app = builder.Build();

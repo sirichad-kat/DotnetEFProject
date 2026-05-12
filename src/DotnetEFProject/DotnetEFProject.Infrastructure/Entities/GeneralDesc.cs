@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DotnetEFProject.Infrastructure.Postgres.Persistence;
+namespace DotnetEFProject.Infrastructure.Entities;
 
 public partial class GeneralDesc
 {
