@@ -50,6 +50,8 @@ namespace DotnetEFProject.Infrastructure.Postgres.Persistence
                     .WithOne(x => x.Profile)
                     .HasForeignKey<UserProfile>(x => x.UserId);
             });
+
+            // 1 : N relationship between Course and Lesson
             modelBuilder.Entity<Course>(entity =>
             {
                 entity.ToTable("courses");
@@ -80,6 +82,7 @@ namespace DotnetEFProject.Infrastructure.Postgres.Persistence
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
+            // M : N relationship between User and Course via Enrollment
             modelBuilder.Entity<Enrollment>(entity =>
             {
                 entity.ToTable("enrollments");

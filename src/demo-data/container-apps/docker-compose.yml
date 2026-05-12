@@ -4,7 +4,7 @@ services:
     container_name: demo_data_postgres
     image: postgres:15.2
     environment:
-      - POSTGRES_USER=demo
+      - POSTGRES_USER=democode
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=DEMO_DATA_SHADOW
     volumes:
@@ -29,7 +29,7 @@ services:
     container_name: demo_data_migrate_db
     environment:
       - LQB_DATABASE_URL=jdbc:postgresql://postgres_sv:5432/DEMO_DATA_SHADOW
-      - LQB_DATABASE_USER=demo
+      - LQB_DATABASE_USER=democode
       - LQB_DATABASE_PASSWORD=postgres
       - LQB_DATABASE_SCHEMA=demo
       - LQB_COMMAND=update
