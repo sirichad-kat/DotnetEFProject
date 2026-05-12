@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: consolidated-2026-05-01
+      author: sirichad.kat
+      context: table,glob
+      changes:
+        - sqlFile:
+            path: migrations/20260501_add_table_init/migration.sql
+        - rollback:
+            - sqlFile:
+                path: migrations/20260501_add_table_init/down.sql

@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  postgres_sv:
+    container_name: demo_data_postgres
+    image: postgres:15.2
+    environment:
+      - POSTGRES_USER=demo
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=DEMO_DATA_SHADOW
+    volumes:
+      - ./vol/data/postgresql:/var/lib/postgresql/data
+      - ./initdb/init.postgresql.sql:/docker-entrypoint-initdb.d/init.postgresql.sql  #ต้องลบ ./vol/data/postgresql script ถึงจะใช้ได้
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U demo']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5432:5432
+    networks:
+      - demo-system-network      
+  demo_data_migrate:
+    build:
+      context: ../../demo-data
+      dockerfile: container-apps/Dockerfile
+    depends_on:
+      postgres_sv:
+        condition: service_healthy
+    container_name: demo_data_migrate_db
+    environment:
+      - LQB_DATABASE_URL=jdbc:postgresql://postgres_sv:5432/DEMO_DATA_SHADOW
+      - LQB_DATABASE_USER=demo
+      - LQB_DATABASE_PASSWORD=postgres
+      - LQB_DATABASE_SCHEMA=demo
+      - LQB_COMMAND=update
+      - LQB_CONTEXT=table,glob
+      - LIQUIBASE_LOG_LEVEL=INFO
+      # - DB_SERVER=postgresdb
+    ports: 
+      - 5400:3000
+    links:
+      - postgres_sv
+    networks:
+      - demo-system-network
+    # Remove container after completion to avoid conflicts on re-run
+    restart: "no"
+networks:
+  demo-system-network:
+    driver: bridge
+ 

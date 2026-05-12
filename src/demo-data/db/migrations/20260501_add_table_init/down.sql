@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS general_desc CASCADE;
+
+DROP TABLE IF EXISTS general_type CASCADE;

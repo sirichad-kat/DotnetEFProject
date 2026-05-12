@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="DotnetEFProject.Api/DotnetEFProject.Api.csproj" />
+  <Project Path="DotnetEFProject.Infrastructure.Postgres/DotnetEFProject.Infrastructure.Postgres.csproj" />
+  <Project Path="DotnetEFProject.Infrastructure/DotnetEFProject.Infrastructure.csproj" />
+</Solution>
