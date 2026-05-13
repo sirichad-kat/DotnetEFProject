@@ -9,7 +9,7 @@ namespace DotnetEFProject.Infrastructure.Postgres.Persistence
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DEMOCODE_DATA_SHADOW;Username=democode;Password=postgres");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DEMO_DATA_SHADOW;Username=democode;Password=postgres");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }
