@@ -21,4 +21,8 @@
     <ProjectReference Include="..\DotnetEFProject.Infrastructure\DotnetEFProject.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\" />
+  </ItemGroup>
+
 </Project>

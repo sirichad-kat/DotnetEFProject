@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS general_desc (
 
 CREATE SEQUENCE users_id_seq START WITH 1 INCREMENT BY 1;
 
+CREATE SEQUENCE users_profile_seq START WITH 1 INCREMENT BY 1;
+
 CREATE TABLE IF NOT EXISTS users (
     id INT NOT NULL DEFAULT nextval('users_id_seq'),
     full_name VARCHAR(200) NOT NULL,
@@ -43,7 +45,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS user_profiles (
-    id INT NOT NULL,
+    id INT NOT NULL nextval('users_profile_seq'),
     bio TEXT,
     birth_date DATE,
     user_id INT NOT NULL UNIQUE REFERENCES users (id),

@@ -5,8 +5,7 @@ namespace DotnetEFProject.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GeneralController : ControllerBase
+    public class AddCourseController : ControllerBase
     {
-
     }
 }

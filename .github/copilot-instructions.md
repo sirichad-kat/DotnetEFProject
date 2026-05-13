@@ -70,9 +70,12 @@ When I ask to "map input to entity", "generate entity mapper", or "map command t
    - Parent entity: `public static [TargetEntity] To[TargetEntity]Entity(this [SourceInput] source)`
    - Child entity list (projected from parent input): `public static List<[ChildEntity]> To[ChildEntity]EntityList(this [SourceInput] source)`
 5. **DateTime Handling**: Always wrap `DateTime` with `DateTime.SpecifyKind(..., DateTimeKind.Unspecified)` when mapping from nullable or input DateTime values to avoid PostgreSQL/EF Core timezone issues.
-6. **Child Collection Pattern**: When the parent input contains a child list (e.g., `source.ItemList`), generate a **separate method** on the parent input that projects the child list — passing any shared parent-level fields (e.g., `Gdtype`, `HeaderId`) into each child row explicitly.
-7. **No Navigation Property assignment**: Do NOT assign `.Children = ...` inside the parent mapper method. Child lists are saved separately by the handler/repository.
-8. **Example output**:
+6. **Child Relationship Strategy** — choose based on how the handler saves data:
+   - **Separate Save (default)**: Child list is saved via a separate `AddRangeAsync` call. Generate a **separate method** projecting the child list. Do NOT assign navigation property inside parent mapper.
+   - **Inline Navigation (single `AddAsync`)**: Insert parent + child in **one `AddAsync` + `SaveChangesAsync`** by assigning the child as a navigation property directly inside the parent mapper. EF Core change tracking resolves FK automatically. Use this when prompted with "single AddAsync", "รอบเดียว", or "inline navigation".
+7. **Shared Keys (Separate Save only)**: Pass parent-level keys (e.g., `Gdtype`, `HeaderId`) into each child row explicitly inside the child list method.
+8. **No Navigation Property assignment (Separate Save only)**: Do NOT assign `.Children = ...` inside the parent mapper method when using Separate Save strategy.
+9. **Example output — Separate Save**:
    ```csharp
    public static class GdcodeMapper
    {
@@ -114,7 +117,7 @@ When I ask to "map input to entity", "generate entity mapper", or "map command t
        }
    }
    ```
-9. **Usage in Handler**:
+   **Usage in Handler**:
    ```csharp
    var header  = input.ToGeneralTypeEntity();
    var details = input.ToGeneralDescEntityList();
@@ -123,13 +126,49 @@ When I ask to "map input to entity", "generate entity mapper", or "map command t
    await _unitOfWork.GeneralDescs.AddRangeAsync(details, cancellationToken);
    await _unitOfWork.SaveChangesAsync(cancellationToken);
    ```
-10. **How to prompt**:
+
+10. **Example output — Inline Navigation (single AddAsync)**:
+    ```csharp
+    public static class UserMapper
+    {
+        // Parent + inline child via EF Core navigation property
+        public static User ToUserEntity(this AddUserInput source)
+        {
+            if (source is null) return null!;
+            return new User
+            {
+                FullName    = source.FullName!,
+                Email       = source.Email!,
+                UserProfile = new UserProfile   // <-- EF tracks and inserts automatically
+                {
+                    Bio       = source.Bio,
+                    BirthDate = source.BirthDate
+                }
+            };
+        }
+
+        public static List<User> ToUserEntityList(this IEnumerable<AddUserInput> source)
+            => source?.Select(x => x.ToUserEntity()).ToList() ?? [];
+    }
+    ```
+    **Usage in Handler**:
+    ```csharp
+    var user = input.ToUserEntity();
+
+    await _unitOfWork.Users.AddAsync(user, cancellationToken);
+    await _unitOfWork.SaveChangesAsync(cancellationToken);
+    // EF Core inserts both User and UserProfile in one transaction,
+    // resolving FK (UserId) automatically via navigation property tracking.
+    ```
+
+11. **How to prompt**:
     ```
     map input to entity สำหรับ [Feature]
-    Input คือ [InputClass] มี child list ชื่อ [ChildListProperty]
+    Input คือ [InputClass]
     Parent Entity คือ [ParentEntity]
-    Child Entity คือ [ChildEntity]
-    shared key จาก parent ที่ต้องส่งไป child คือ [fieldName]
+    Child Entity คือ [ChildEntity]  (ถ้ามี child list ให้ระบุ ChildListProperty ด้วย)
+    Strategy: "inline navigation" | "separate save"
+    shared key จาก parent ที่ต้องส่งไป child คือ [fieldName]  (เฉพาะ separate save)
     ```
 
 ### EF Core Entity Configuration Separation Pattern

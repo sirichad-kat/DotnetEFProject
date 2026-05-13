@@ -1,20 +1,20 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DotnetEFProject.Infrastructure.Postgres.Queries.CourseEnrollment;
+using DotnetEFProject.Infrastructure.Postgres.Repositories.CourseEnrollment;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace DotnetEFProject.Api.Extension
 {
     public static class ApplicationServiceExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, Assembly? assembly = null)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, params Assembly[] assemblies)
         {
-            assembly ??= Assembly.GetExecutingAssembly();
+            services.AddScoped<IGetUserListViewReader, GetUserListViewReader>();
+            services.AddScoped<IGetUserViewReader, GetUserViewReader>();
+            services.AddScoped<IAddUserRepository, AddUserRepository>();
+            services.AddScoped<IModifyUserRepository, ModifyUserRepository>();
+            services.AddScoped<IDeleteUserRepository, DeleteUserRepository>();
 
-            services.Scan(scan => scan
-               .FromAssemblies(assembly)
-               .AddClasses(classes => classes
-                   .Where(type => type.Name.EndsWith("Service")))
-               .AsSelfWithInterfaces()
-               .WithScopedLifetime());
             return services;
         }
     }

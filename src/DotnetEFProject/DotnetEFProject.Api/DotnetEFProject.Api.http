@@ -1,6 +1,9 @@
-@DotnetEFProject.Api_HostAddress = http://localhost:5008
+@DotnetEFProject.Api_HostAddress = http://localhost:44324
 
-GET {{DotnetEFProject.Api_HostAddress}}/weatherforecast/
+GET {{DotnetEFProject.Api_HostAddress}}/api/UserQuery/GetUserList
 Accept: application/json
 
 ###
+
+GET {{DotnetEFProject.Api_HostAddress}}/api/UserQuery/GetUser?Id=1
+Accept: application/json
