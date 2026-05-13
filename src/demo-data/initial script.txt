@@ -1,0 +1,59 @@
+
+INSERT INTO users (full_name, email)
+VALUES
+    ('Somchai Prasert', 'somchai@example.com'),
+    ('Suda Wattanakul', 'suda@example.com'),
+    ('Anan Chaiyo', 'anan@example.com'),
+    ('Malee Kittisak', 'malee@example.com'),
+    ('Kanya Srisuk', 'kanya@example.com');
+
+INSERT INTO user_profiles (id, bio, birth_date, user_id)
+VALUES
+    (1, 'Backend developer interested in PostgreSQL and .NET.', '1994-03-15', 1),
+    (2, 'Frontend developer learning backend development.', '1997-08-21', 2),
+    (3, 'Software tester who wants to understand database access.', '1992-11-02', 3),
+    (4, 'Project coordinator exploring API development.', '1990-06-10', 4),
+    (5, 'Junior developer starting with C# and EF Core.', '1999-12-05', 5);
+
+INSERT INTO courses (id, title, price)
+VALUES
+    (1, 'Entity Framework Core Fundamentals', 2500.00),
+    (2, 'Dapper with PostgreSQL', 2200.00),
+    (3, 'ASP.NET Core Web API Workshop', 3000.00),
+    (4, 'Database Design for Developers', 1800.00);
+
+INSERT INTO lessons (id, title, duration_minutes, course_id)
+VALUES
+    (1, 'Introduction to EF Core', 45, 1),
+    (2, 'DbContext and DbSet', 50, 1),
+    (3, 'Code First Migration', 60, 1),
+    (4, 'LINQ Query and Projection', 55, 1),
+
+    (5, 'Introduction to Dapper', 40, 2),
+    (6, 'QueryAsync and ExecuteAsync', 50, 2),
+    (7, 'Mapping Query Result to DTO', 45, 2),
+
+    (8, 'Creating Minimal API', 60, 3),
+    (9, 'Dependency Injection and Configuration', 50, 3),
+    (10, 'Building CRUD Endpoints', 70, 3),
+
+    (11, 'Table Relationship Concepts', 45, 4),
+    (12, 'One-to-One, One-to-Many, Many-to-Many', 60, 4);
+
+INSERT INTO enrollments (user_id, course_id, enrolled_at)
+VALUES
+    (1, 1, '2026-05-01 09:00:00'),
+    (1, 2, '2026-05-02 10:30:00'),
+    (1, 3, '2026-05-03 13:15:00'),
+
+    (2, 1, '2026-05-04 11:00:00'),
+    (2, 4, '2026-05-05 14:20:00'),
+
+    (3, 2, '2026-05-06 09:45:00'),
+    (3, 3, '2026-05-07 15:10:00'),
+
+    (4, 1, '2026-05-08 10:00:00'),
+    (4, 2, '2026-05-08 10:30:00'),
+    (4, 4, '2026-05-09 16:00:00'),
+
+    (5, 3, '2026-05-10 09:30:00');
