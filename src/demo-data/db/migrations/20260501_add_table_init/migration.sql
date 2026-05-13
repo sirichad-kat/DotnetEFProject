@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS user_profiles (
-    id INT NOT NULL nextval('users_profile_seq'),
+    id INT NOT NULL DEFAULT nextval('users_profile_seq'),
     bio TEXT,
     birth_date DATE,
     user_id INT NOT NULL UNIQUE REFERENCES users (id),
