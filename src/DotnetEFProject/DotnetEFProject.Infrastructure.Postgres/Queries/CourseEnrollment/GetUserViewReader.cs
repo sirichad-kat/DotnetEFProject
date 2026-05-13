@@ -12,7 +12,7 @@ namespace DotnetEFProject.Infrastructure.Postgres.Queries.CourseEnrollment
 
     public interface IGetUserViewReader
     {
-        Task<GetUserOutput?> GetUserAsync(GetUserInput req, CancellationToken ct = default);
+        Task<GetUserOutput?> GetUserAsync(GetUserInput req, CancellationToken ct = default); 
     }
 
     public class GetUserViewReader : IGetUserViewReader
@@ -32,6 +32,8 @@ namespace DotnetEFProject.Infrastructure.Postgres.Queries.CourseEnrollment
                    .FirstOrDefaultAsync(ct);
             return res != null ? UserMapper.ToDto(res) : null;
         }
+
+      
     }
 
 }

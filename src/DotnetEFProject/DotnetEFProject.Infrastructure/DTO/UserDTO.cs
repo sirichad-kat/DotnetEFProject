@@ -5,31 +5,14 @@ using System.Text;
 
 namespace DotnetEFProject.Infrastructure.DTO
 {
-    public class AddUserInput
-    {
-        public string? FullName { get; set; }
-        public string? Email { get; set; }
-        public string? Bio { get; set; }
-        public DateOnly? BirthDate { get; set; }
-    }
+    public sealed record AddUserInput(string FullName, string Email, string? Bio, DateOnly? BirthDate); 
 
-    public class GetUserListOutput
-    {
-        public int Id { get; set; }
-        public string FullName { get; set; } = null!; 
-        public DateOnly? BirthDate { get; set; }
-    }
+    public sealed record GetUserListOutput(int Id, string FullName, DateOnly? BirthDate);
 
-    public class GetUserInput
-    {
-        public int Id { get; set; }
-    }
-    public class GetUserOutput
-    {
-        public int Id { get; set; }
-        public string FullName { get; set; } = null!;
-        public string? Email { get; set; } 
-    }
-     
+    public sealed record GetUserInput(int Id);
+    public sealed record GetUserOutput(int Id, string FullName, string? Email);
 
+    public sealed record DeleteUserInput(int Id); 
+
+    public sealed record ModifyUserInput(int Id,  string? Email, string? Bio); 
 }

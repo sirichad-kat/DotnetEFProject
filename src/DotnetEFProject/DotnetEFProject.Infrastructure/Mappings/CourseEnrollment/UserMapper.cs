@@ -30,24 +30,14 @@ namespace DotnetEFProject.Infrastructure.Mappings.CourseEnrollment
         public static GetUserOutput ToDto(this Entities.User source)
         {
             if (source is null) return null!;
-            return new GetUserOutput
-            {
-                Id = source.Id,
-                FullName = source.FullName,
-                Email = source.Email
-            };
+            return new GetUserOutput(source.Id, source.FullName, source.Email);
         }
 
         public static List<GetUserOutput> ToDtoList(this IEnumerable<Entities.User> source)
             => source?.Select(x => x.ToDto()).ToList() ?? [];
 
         public static Expression<Func<Entities.User, GetUserOutput>> ToExpression()
-            => source => new GetUserOutput
-            {
-                Id = source.Id,
-                FullName = source.FullName,
-                Email = source.Email
-            };
+            => source => new GetUserOutput(source.Id, source.FullName, source.Email);
     }
 }
  

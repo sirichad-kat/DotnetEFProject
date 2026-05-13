@@ -12,6 +12,8 @@ namespace DotnetEFProject.Api.Extension
             services.AddScoped<IGetUserListViewReader, GetUserListViewReader>();
             services.AddScoped<IGetUserViewReader, GetUserViewReader>();
             services.AddScoped<IAddUserRepository, AddUserRepository>();
+            services.AddScoped<IModifyUserRepository, ModifyUserRepository>();
+            services.AddScoped<IDeleteUserRepository, DeleteUserRepository>();
 
             return services;
         }
