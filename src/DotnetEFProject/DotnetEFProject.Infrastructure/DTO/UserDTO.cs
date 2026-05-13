@@ -1,9 +1,4 @@
-﻿using DotnetEFProject.Infrastructure.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DotnetEFProject.Infrastructure.DTO
+﻿namespace DotnetEFProject.Infrastructure.DTO
 {
     public sealed record AddUserInput(string FullName, string Email, string? Bio, DateOnly? BirthDate); 
 

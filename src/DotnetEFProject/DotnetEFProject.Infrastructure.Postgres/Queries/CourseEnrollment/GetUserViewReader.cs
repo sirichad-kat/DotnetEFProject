@@ -18,19 +18,15 @@ namespace DotnetEFProject.Infrastructure.Postgres.Queries.CourseEnrollment
     public class GetUserViewReader : IGetUserViewReader
     {
 
-        readonly PostgresApplicationDbContext context;
-        public GetUserViewReader(PostgresApplicationDbContext _context)
-        {
-            context = _context;
-        }
+        //readonly PostgresApplicationDbContext context;
+        //public GetUserViewReader(PostgresApplicationDbContext _context)
+        //{
+        //    context = _context;
+        //}
 
         public async Task<GetUserOutput?> GetUserAsync(GetUserInput req, CancellationToken ct = default)
         {
-            var res = await context.Users
-                   .AsNoTracking()
-                   .Where(x => x.Id == req.Id)
-                   .FirstOrDefaultAsync(ct);
-            return res != null ? UserMapper.ToDto(res) : null;
+            throw new NotImplementedException();
         }
 
       
